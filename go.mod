@@ -1,4 +1,4 @@
-module github.com/cisco/provider-thousandeyes
+module github.com/gorositopablo/provider-thousandeyes
 
 go 1.21
 
