@@ -31,12 +31,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/metrics"
 
-	"github.com/cisco/provider-thousandeyes/apis"
-	"github.com/cisco/provider-thousandeyes/apis/v1alpha1"
-	"github.com/cisco/provider-thousandeyes/config"
-	"github.com/cisco/provider-thousandeyes/internal/clients"
-	"github.com/cisco/provider-thousandeyes/internal/controller"
-	"github.com/cisco/provider-thousandeyes/internal/features"
+	"github.com/gorositopablo/provider-thousandeyes/apis"
+	"github.com/gorositopablo/provider-thousandeyes/apis/v1alpha1"
+	"github.com/gorositopablo/provider-thousandeyes/config"
+	"github.com/gorositopablo/provider-thousandeyes/internal/clients"
+	"github.com/gorositopablo/provider-thousandeyes/internal/controller"
+	"github.com/gorositopablo/provider-thousandeyes/internal/features"
 )
 
 func main() {

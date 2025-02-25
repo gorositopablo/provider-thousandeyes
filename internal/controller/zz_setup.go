@@ -9,8 +9,8 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	resource "github.com/cisco/provider-thousandeyes/internal/controller/null/resource"
-	providerconfig "github.com/cisco/provider-thousandeyes/internal/controller/providerconfig"
+	resource "github.com/gorositopablo/provider-thousandeyes/internal/controller/null/resource"
+	providerconfig "github.com/gorositopablo/provider-thousandeyes/internal/controller/providerconfig"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to

@@ -15,7 +15,7 @@ import (
 
 const (
 	resourcePrefix = "thousandeyes"
-	modulePath     = "github.com/cisco/provider-thousandeyes"
+	modulePath     = "github.com/gorositopablo/provider-thousandeyes"
 )
 
 //go:embed schema.json

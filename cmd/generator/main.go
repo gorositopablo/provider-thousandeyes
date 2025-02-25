@@ -11,7 +11,7 @@ import (
 
 	"github.com/crossplane/upjet/pkg/pipeline"
 
-	"github.com/cisco/provider-thousandeyes/config"
+	"github.com/gorositopablo/provider-thousandeyes/config"
 )
 
 func main() {
