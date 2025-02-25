@@ -2,3 +2,17 @@ apiVersion: meta.pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-thousandeyes
+  annotations:
+    meta.crossplane.io/maintainer: Crossplane Maintainers <gorosito.pablo@hotmail.com>
+    meta.crossplane.io/source: github.com/gorositopablo/provider-thousandeyes
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/description: |
+      ThousandEyes Crossplane provider adds support for
+      managing Cisco ThousandEyes HTTP Test resources in Kubernetes.
+    meta.crossplane.io/readme: |
+      `provider-thousandeyes` is the Crossplane infrastructure provider for [Cisco ThousandEyes](https://github.com/thousandeyes/terraform-provider-thousandeyes) to be able to create HTTP test from Kubernetes.
+      If you encounter an issue please reach out on
+      [slack.crossplane.io](https://slack.crossplane.io) and create an issue in
+      the
+      [gorositopablo/provider-thousandeyes](https://github.com/gorositopablo/provider-thousandeyes)
+      repo.
