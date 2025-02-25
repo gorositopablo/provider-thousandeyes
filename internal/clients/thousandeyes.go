@@ -20,7 +20,7 @@ import (
 
 const (
 	token          = "token"
-	accountGroupId = "account_group_id"
+	accountGroupID = "account_group_id"
 	// error messages
 	errNoProviderConfig     = "no providerConfigRef provided"
 	errGetProviderConfig    = "cannot get referenced ProviderConfig"
@@ -66,8 +66,8 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 
 		// Set credentials in the provider configuration.
 		ps.Configuration = map[string]any{}
-		if v, ok := creds[accountGroupId]; ok {
-			ps.Configuration[accountGroupId] = v
+		if v, ok := creds[accountGroupID]; ok {
+			ps.Configuration[accountGroupID] = v
 		}
 		if v, ok := creds[token]; ok {
 			ps.Configuration[token] = v
