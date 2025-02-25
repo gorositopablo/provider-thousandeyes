@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+
 package controller
 
 import (
@@ -9,15 +10,16 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	resource "github.com/gorositopablo/provider-thousandeyes/internal/controller/null/resource"
 	providerconfig "github.com/gorositopablo/provider-thousandeyes/internal/controller/providerconfig"
+server "github.com/gorositopablo/provider-thousandeyes/internal/controller/httptest/server"
+
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
+		server.Setup,
 		providerconfig.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {

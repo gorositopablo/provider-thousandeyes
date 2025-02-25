@@ -1,0 +1,16 @@
+apiVersion: httptest.cisco.io/v1alpha1
+kind: Server
+metadata:
+  annotations:
+    meta.upbound.io/example-id: httptest/v1alpha1/server
+  labels:
+    testing.upbound.io/example-name: example_http_server_test
+  name: example-http-server-test
+spec:
+  forProvider:
+    agents:
+    - agentId: 3
+    alertsEnabled: false
+    interval: 120
+    testName: Example HTTP test set from Terraform provider
+    url: https://www.thousandeyes.com

@@ -1,40 +1,814 @@
-name: hashicorp/null
+name: thousandeyes/thousandeyes
 resources:
-    null_resource:
+    thousandeyes_agent_to_agent:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. On Terraform 1.4 and later, use the terraform_data resource type https://developer.hashicorp.com/terraform/language/resources/terraform-data instead. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
+        name: thousandeyes_agent_to_agent
+        title: thousandeyes_agent_to_agent Resource - terraform-provider-thousandeyes
         examples:
-            - name: cluster
+            - name: example_agent_to_agent_test
               manifest: |-
                 {
-                  "connection": [
+                  "agents": [
                     {
-                      "host": "${element(aws_instance.cluster[*].public_ip, 0)}"
+                      "agent_id": 3
                     }
                   ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \",\n      aws_instance.cluster[*].private_ip)}"
-                        ]
-                      }
-                    ]
-                  },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster[*].id)}"
-                  }
+                  "alerts_enabled": false,
+                  "direction": "TO_TARGET",
+                  "interval": 120,
+                  "protocol": "TCP",
+                  "target_agent_id": "5",
+                  "test_name": "Example Agent to Agent test set from Terraform provider"
                 }
-              dependencies:
-                aws_instance.cluster: |-
-                    {
-                      "ami": "ami-0dcc1e21636832c5d",
-                      "count": 3,
-                      "instance_type": "m5.large"
-                    }
         argumentDocs:
-            id: (String) This is set to a random value at create time.
-            triggers: (Map of String) A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            direction: (String) [TO_TARGET, FROM_TARGET, BIDIRECTIONAL] The direction of the test (affects how results are shown).
+            dscp: (String) The Differentiated Services Code Point (DSCP) label.
+            dscp_id: (Number) The DSCP ID.
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            ip_address: (String) The IP address of the BGP monitor.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            mss: (Number) The maximum segment size, in bytes. Value can be from 30 to 1400.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            port: (Number) The target port.
+            protocol: (String) [TCP or UDP] The protocol for agent to agent tests. Defaults to TCP.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            target_agent_id: '(Number) The target agent''s unique ID. Pulled from the /agents endpoint. Both the ''agents'': [] and the targetAgentID cannot be Cloud Agents. Can be Enterprise Agent -> Cloud, Cloud -> Enterprise Agent, or Enterprise Agent -> Enterprise Agent.'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            throughput_duration: (Number) The throughput duration in milliseconds. The default value is 10000.
+            throughput_measurements: (Boolean) Enables or disables throughput measurements. This is not allowed when the source or target of the test is a Cloud Agent. Defaults to disabled.
+            throughput_rate: (Number) Defines the throughput rate. Fo UDP tests only.
+            type: (String) The type of test.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+        importStatements: []
+    thousandeyes_agent_to_server:
+        subCategory: ""
+        name: thousandeyes_agent_to_server
+        title: thousandeyes_agent_to_server Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_agent_to_server_test
+              manifest: |-
+                {
+                  "agents": [
+                    {
+                      "agent_id": 3
+                    }
+                  ],
+                  "alerts_enabled": false,
+                  "interval": 120,
+                  "port": 443,
+                  "server": "www.thousandeyes.com",
+                  "test_name": "Example Agent to Server test set from Terraform provider"
+                }
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            bandwidth_measurements: (Boolean) Set to 1 to measure bandwidth. This only applies to Enterprise Agents assigned to the test, and requires that networkMeasurements is set. Defaults to 'false'.
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            ip_address: (String) The IP address of the BGP monitor.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            port: (Number) The target port.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) The protocol used by dependent network tests (end-to-end, path trace, PMTUD). Default value is TCP.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            server: (String) The target host.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+        importStatements: []
+    thousandeyes_alert_rule:
+        subCategory: ""
+        name: thousandeyes_alert_rule
+        title: thousandeyes_alert_rule Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_alert_rule
+              manifest: |-
+                {
+                  "alert_type": "HTTP Server",
+                  "expression": "((errorType != \"None\"))",
+                  "rounds_violating_out_of": 1,
+                  "rounds_violating_required": 1,
+                  "rule_name": "Example Alert Rule set from Terraform provider"
+                }
+        argumentDocs:
+            alert_rule_id: (Number) The unique ID of the alert rule.
+            alert_type: (String) [Page Load, HTTP Server, End-to-End (Server), End-to-End (Agent), DNS Server, DNS Trace, DNSSEC, Transactions, Web Transactions, BGP, Path Trace, FTP, SIP Server] The type of alert rule. Acceptable values include the verbose names of supported tests.
+            default: (Boolean) Alert rules allow up to 1 alert rule to be selected as a default for each type. By marking an alert rule as default, the rule will be automatically included in subsequently created tests that test a metric used in the alert rule.
+            direction: (String) [TO_TARGET, FROM_TARGET, BIDIRECTIONAL] The direction of the test (affects how results are shown).
+            email: (Block Set) The email notification. (see below for nested schema)
+            expression: (String) The alert rule evaluation expression.
+            id: (String) The ID of this resource.
+            include_covered_prefixes: (Boolean) Include queries for subprefixes detected under this prefix.
+            integration_id: (String) The integration ID, as a string.
+            integration_type: (String) The integration type, as a string.
+            message: (String) The contents of the email, as a string.
+            minimum_sources: (Number) The minimum number of agents or monitors that must meet the specified criteria in order to trigger an alert. This option is mutually exclusive with 'minimum_sources_pct'.
+            minimum_sources_pct: (Number) The minimum percentage of agents or monitors that must meet the specified criteria in order to trigger an alert. This option is mutually exclusive with 'minimum_sources'.
+            notifications: (Block Set) The list of notifications for the alert rule. (see below for nested schema)
+            notify_on_clear: (Boolean) Set to 'true' to trigger the notification when the alert clears.
+            recipient: (Set of String) The email addresses to send the notification to.
+            rounds_violating_mode: (String) [ANY or EXACT] Defines whether the same agent(s) must meet the EXACT same threshold in consecutive rounds or not. The default value is ANY.
+            rounds_violating_out_of: (Number) Specifies the divisor (Y value) of the “X of Y times” condition in an alert rule.  Minimum value is 1, maximum value is 10.
+            rounds_violating_required: (Number) Specifies the numerator (X value) of the “X of Y times” condition in an alert rule.  Minimum value is 1, maximum value is 10. Must be less than or equal to 'roundsViolatingOutOf'.
+            rule_id: (Number) The unique ID of the alert rule.
+            rule_name: (String) The name of the alert rule.
+            severity: (String) [INFO, MINOR, MAJOR or CRITICAL] The severity level of the alert rule. The default value is INFO.
+            test_id: (Number) The list of unique test IDs.
+            test_ids: (List of Number) The valid test IDs.
+            tests: (Block List) The list of included tests. (see below for nested schema)
+            third_party: (Block Set) Third party notification. (see below for nested schema)
+            webhook: (Block Set) Webhook notification. (see below for nested schema)
+        importStatements: []
+    thousandeyes_bgp:
+        subCategory: ""
+        name: thousandeyes_bgp
+        title: thousandeyes_bgp Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_bgp_test
+              manifest: |-
+                {
+                  "alerts_enabled": false,
+                  "prefix": "163.10.0.0/16",
+                  "test_name": "Example BGP test set from Terraform provider",
+                  "use_public_bgp": true
+                }
+        argumentDocs:
+            agent_id: (Number)
+            agents: (List of Object) (see below for nested schema)
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            include_covered_prefixes: (Boolean) Include queries for subprefixes detected under this prefix.
+            ip_address: (String) The IP address of the BGP monitor.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            prefix: (String) The BGP network address prefix.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+        importStatements: []
+    thousandeyes_dns_server:
+        subCategory: ""
+        name: thousandeyes_dns_server
+        title: thousandeyes_dns_server Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_dns_server_test
+              manifest: |-
+                {
+                  "agents": [
+                    {
+                      "agent_id": 3
+                    }
+                  ],
+                  "alerts_enabled": false,
+                  "dns_servers": [
+                    {
+                      "server_name": "ns1.google.com"
+                    }
+                  ],
+                  "domain": "www.thousandeyes.com",
+                  "interval": 120,
+                  "test_name": "Example DNS server test set from Terraform provider"
+                }
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            bandwidth_measurements: (Boolean) Set to 1 to measure bandwidth. This only applies to Enterprise Agents assigned to the test, and requires that networkMeasurements is set. Defaults to 'false'.
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            dns_servers: '(Block Set, Min: 1) The array of DNS Server objects (“serverName”: “fqdn of server”). (see below for nested schema)'
+            dns_transport_protocol: (String) [UDP or TCP] The DNS transport protocol used for DNS requests. Defaults to UDP.
+            domain: "(String) See notes\ttarget record for test, suffixed by record type (ie, www.thousandeyes.com CNAME). If no record type is specified, the test will default to an ANY record."
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            ip_address: (String) The IP address of the BGP monitor.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) The protocol used by dependent network tests (end-to-end, path trace, PMTUD). Default value is TCP.
+            recursive_queries: (Boolean) Defines whether to run the query with the recursion desired (RD) flag enabled.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            server_id: (Number) The unique ID of the DNS server.
+            server_name: (String) The DNS server name.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+        importStatements: []
+    thousandeyes_dns_trace Resource - terraform-provider-thousandeyes:
+        subCategory: ""
+        name: thousandeyes_dns_trace Resource - terraform-provider-thousandeyes
+        title: thousandeyes_dns_trace Resource - terraform-provider-thousandeyes
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            dns_transport_protocol: (String) [UDP or TCP] The DNS transport protocol used for DNS requests. Defaults to UDP.
+            domain: "(String) See notes\ttarget record for test, suffixed by record type (ie, www.thousandeyes.com CNAME). If no record type is specified, the test will default to an ANY record."
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            name: (String) Account name.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+        importStatements: []
+    thousandeyes_dnssec Resource - terraform-provider-thousandeyes:
+        subCategory: ""
+        name: thousandeyes_dnssec Resource - terraform-provider-thousandeyes
+        title: thousandeyes_dnssec Resource - terraform-provider-thousandeyes
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            domain: "(String) See notes\ttarget record for test, suffixed by record type (ie, www.thousandeyes.com CNAME). If no record type is specified, the test will default to an ANY record."
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            name: (String) Account name.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+        importStatements: []
+    thousandeyes_ftp_server Resource - terraform-provider-thousandeyes:
+        subCategory: ""
+        name: thousandeyes_ftp_server Resource - terraform-provider-thousandeyes
+        title: thousandeyes_ftp_server Resource - terraform-provider-thousandeyes
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            download_limit: (Number) Specify the maximum number of bytes to download from the target object.
+            enabled: (Boolean) Enables or disables the test.
+            ftp_target_time: (Number) The target time for operation completion. Specified in milliseconds.
+            ftp_time_limit: (Number) Set the time limit for the test (in seconds). FTP tests default to 10s.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            password: (String) The password to be used to authenticate with the destination server (required for FTP).
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) The protocol used by dependent network tests (end-to-end, path trace, PMTUD). Default value is TCP.
+            rel: (String)
+            request_type: (String) [Download, Upload, or List] Sets the type of activity for the test.
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            url: (String) The target URL for the test.
+            use_active_ftp: (Number) Enables active FTP. If not set, tests default to use passive FTP.
+            use_explicit_ftps: (Number) Enables explicit FTPS (FTP over SSL). By default, tests will autodetect when it is appropriate to use FTPS.
+            username: (String) The username to be used to authenticate with the destination server.
+        importStatements: []
+    thousandeyes_http_server:
+        subCategory: ""
+        name: thousandeyes_http_server
+        title: thousandeyes_http_server Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_http_server_test
+              manifest: |-
+                {
+                  "agents": [
+                    {
+                      "agent_id": 3
+                    }
+                  ],
+                  "alerts_enabled": false,
+                  "interval": 120,
+                  "test_name": "Example HTTP test set from Terraform provider",
+                  "url": "https://www.thousandeyes.com"
+                }
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            auth_type: (String) [NONE, BASIC, NTLM, KERBEROS] The HTTP authentication type. Defaults to NONE.
+            bandwidth_measurements: (Boolean) Set to 1 to measure bandwidth. This only applies to Enterprise Agents assigned to the test, and requires that networkMeasurements is set. Defaults to 'false'.
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            client_certificate: (String) String representation (containing newline characters) of the client certificate, if used.
+            content_regex: (String) Verify content using a regular expression. This field does not require escaping.
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            custom_headers: (Map of String) The custom headers.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            desired_status_code: (String) The valid HTTP response code you’re interested in retrieving.
+            dns_override: (String) The IP address to use for DNS override.
+            download_limit: (Number) Specify the maximum number of bytes to download from the target object.
+            enabled: (Boolean) Enables or disables the test.
+            follow_redirects: (Boolean) Follow HTTP/301 or HTTP/302 redirect directives. Defaults to 'true'.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            headers: '(List of String) ["header: value", "header2: value"] The array of header strings.'
+            href: (String)
+            http_target_time: (Number) The target time for HTTP server completion, specified in milliseconds.
+            http_time_limit: (Number) The target time for HTTP server limits, specified in seconds.
+            http_version: (Number) Set to 2 for the default HTTP version (prefer HTTP/2), or 1 for HTTP/1.1 only.
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            ip_address: (String) The IP address of the BGP monitor.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            password: (String) The password to be used to authenticate with the destination server.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            post_body: (String) The POST body content. No escaping is required. If the post body is set to something other than empty, the requestMethod will be set to POST.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) The protocol used by dependent network tests (end-to-end, path trace, PMTUD). Default value is TCP.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            ssl_version: (String) Reflects the verbose ssl protocol version used by a test.
+            ssl_version_id: (Number) Defines the SSL version. 0 for auto, 3 for SSLv3, 4 for TLS v1.0, 5 for TLS v1.1, 6 for TLS v1.2.
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            url: (String) The target URL for the test.
+            use_ntlm: (Boolean) Enable to use basic authentication. Only include this field if you are using authentication. Requires the username and password to be set if enabled.
+            user_agent: (String) The user-agent string to be provided during the test.
+            username: (String) The username to be used to authenticate with the destination server.
+            verify_certificate: (Boolean) Set whether to ignore certificate errors. Set to 'false' to ignore certificate errors. The default value is 'true'.
+        importStatements: []
+    thousandeyes_label Resource - terraform-provider-thousandeyes:
+        subCategory: ""
+        name: thousandeyes_label Resource - terraform-provider-thousandeyes
+        title: thousandeyes_label Resource - terraform-provider-thousandeyes
+        argumentDocs:
+            agent_id: (Number) The list of unique agent IDs that the label is applied to.
+            agents: (Block Set) The list of agents to use. (see below for nested schema)
+            builtin: (Boolean) Set to 'true' for built-in labels, or to 'false' for user-created labels. Built-in labels are read-only.
+            group_id: (Number) The unique ID of the label. For built-in labels, this number is a negative.
+            id: (String) The ID of this resource.
+            name: (String) The name of the test.
+            test_id: (Number) The list of unique test IDs.
+            tests: (Block Set) The list of included tests. (see below for nested schema)
+            type: (String) [tests, agents, endpoint_tests, or endpoint_agents] The type of label.
+        importStatements: []
+    thousandeyes_page_load:
+        subCategory: ""
+        name: thousandeyes_page_load
+        title: thousandeyes_page_load Resource - terraform-provider-thousandeyes
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "agents": [
+                    {
+                      "agent_id": 3
+                    }
+                  ],
+                  "alerts_enabled": false,
+                  "http_interval": 120,
+                  "interval": 120,
+                  "test_name": "Example Page Load test set from Terraform provider",
+                  "url": "https://www.thousandeyes.com"
+                }
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            auth_type: (String) [NONE, BASIC, NTLM, KERBEROS] The HTTP authentication type. Defaults to NONE.
+            bandwidth_measurements: (Boolean) Set to 1 to measure bandwidth. This only applies to Enterprise Agents assigned to the test, and requires that networkMeasurements is set. Defaults to 'false'.
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            content_regex: (String) Verify content using a regular expression. This field does not require escaping.
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            custom_headers: (Map of String) The custom headers.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            enabled: (Boolean) Enables or disables the test.
+            follow_redirects: (Boolean) Follow HTTP/301 or HTTP/302 redirect directives. Defaults to 'true'.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            http_interval: (Number) The interval to run the HTTP server test on.
+            http_target_time: (Number) The target time for HTTP server completion, specified in milliseconds.
+            http_time_limit: (Number) The target time for HTTP server limits, specified in seconds.
+            http_version: (Number) Set to 2 for the default HTTP version (prefer HTTP/2), or 1 for HTTP/1.1 only.
+            id: (String) The ID of this resource.
+            include_headers: (Boolean) Set to 'true' to capture response headers for objects loaded by the test.
+            interval: (Number) The interval to run the test on, in seconds.
+            ip_address: (String) The IP address of the BGP monitor.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            page_load_target_time: (Number) The target time for page load completion, specified in seconds (1 to 30). The value cannot exceed the pageLoadTimeLimit value.
+            page_load_time_limit: (Number) The page load time limit. This value must be larger than httpTimeLimit, and defaults to 10 seconds.
+            password: (String) The password to be used to authenticate with the destination server.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) The protocol used by dependent network tests (end-to-end, path trace, PMTUD). Default value is TCP.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            ssl_version: (String) Reflects the verbose ssl protocol version used by a test.
+            ssl_version_id: (Number) Defines the SSL version. 0 for auto, 3 for SSLv3, 4 for TLS v1.0, 5 for TLS v1.1, 6 for TLS v1.2.
+            subinterval: (Number) The subinterval for round-robin testing (in seconds). The value must be less than or equal to 'interval'.
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            url: (String) The target URL for the test.
+            use_ntlm: (Boolean) Enable to use basic authentication. Only include this field if you are using authentication. Requires the username and password to be set if enabled.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+            user_agent: (String) The user-agent string to be provided during the test.
+            username: (String) The username to be used to authenticate with the destination server.
+            verify_certificate: (Boolean) Set whether to ignore certificate errors. Set to 'false' to ignore certificate errors. The default value is 'true'.
+        importStatements: []
+    thousandeyes_sip_server:
+        subCategory: ""
+        name: thousandeyes_sip_server
+        title: thousandeyes_sip_server Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_sip_server_test
+              manifest: |-
+                {
+                  "agents": [
+                    {
+                      "agent_id": 3
+                    }
+                  ],
+                  "alerts_enabled": false,
+                  "interval": 120,
+                  "target_sip_credentials": [
+                    {
+                      "auth_user": "",
+                      "port": 5060,
+                      "protocol": "TCP",
+                      "sip_registrar": "example.org"
+                    }
+                  ],
+                  "test_name": "Example SIP server test set from Terraform provider"
+                }
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            auth_user: (String) The username for authentication with the SIP server.
+            bandwidth_measurements: (Boolean) Set to 1 to measure bandwidth. This only applies to Enterprise Agents assigned to the test, and requires that networkMeasurements is set. Defaults to 'false'.
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            builtin: (Boolean)
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            options_regex: (String) A regex string of options. This field does not require escaping.
+            password: (String) The password to be used to authenticate with the destination server.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            port: (Number) The target port.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) [TCP, TLS, or UDP] The transport layer for SIP communication. Can be either TCP, TLS (TLS over TCP), or UDP, and defaults to TCP.
+            register_enabled: (Boolean) Configure whether to perform SIP registration on the test target with the SIP REGISTER command. Default value is 'false'.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            sip_proxy: (String) The SIP proxy. This is distinct from the SIP server, and is specified as a domain name or IP address.
+            sip_registrar: (String) The SIP server to be tested, specified by domain name or IP address.
+            sip_target_time: (Number) The target time for test completion, specified in milliseconds.
+            sip_time_limit: (Number) The test time limit. Can be between 5 and 10 seconds, and defaults to 5 seconds.
+            target_sip_credentials: '(Block List, Min: 1, Max: 1) The Target SIP server credentials. (see below for nested schema)'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+            user: (String) The username for SIP registration. This should be unique within a ThousandEyes account group.
+        importStatements: []
+    thousandeyes_voice:
+        subCategory: ""
+        name: thousandeyes_voice
+        title: thousandeyes_voice Resource - terraform-provider-thousandeyes
+        examples:
+            - name: example_voice_test
+              manifest: |-
+                {
+                  "agents": [
+                    {
+                      "agent_id": 3
+                    }
+                  ],
+                  "alerts_enabled": false,
+                  "bgp_measurements": true,
+                  "interval": 120,
+                  "target_agent_id": 4,
+                  "test_name": "Example RTP stream test set from Terraform provider",
+                  "use_public_bgp": true
+                }
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            bgp_measurements: (Boolean) Enable BGP measurements. Set to true for enabled, false for disabled.
+            bgp_monitors: (Block List) The array of BGP monitor object IDs. The monitorIDs can be sourced from the /bgp-monitors endpoint. (see below for nested schema)
+            builtin: (Boolean)
+            codec: (String) The label of the codec.
+            codec_id: (Number) The unique ID of the codec to use.
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            dscp: (String) The Differentiated Services Code Point (DSCP) label.
+            dscp_id: (Number) The DSCP ID.
+            duration: (Number) The duration of the test, in seconds (5 to 30).
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            id: (String) The ID of this resource.
+            interval: (Number) The interval to run the test on, in seconds.
+            ip_address: (String) The IP address of the BGP monitor.
+            jitter_buffer: (Number) The de-jitter buffer size, in seconds (0 to 150).
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            monitor_id: (Number) The unique ID of the BGP monitor.
+            monitor_name: (String) The name of the BGP monitor.
+            monitor_type: (String) [Public or Private] Shows the type of BGP monitor.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network: (String) The name of the autonomous system in which the BGP monitor is found.
+            num_path_traces: (Number) The number of path traces.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            target_agent_id: '(Number) The target agent''s unique ID. Pulled from the /agents endpoint. Both the ''agents'': [] and the targetAgentID cannot be Cloud Agents. Can be Enterprise Agent -> Cloud, Cloud -> Enterprise Agent, or Enterprise Agent -> Enterprise Agent.'
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            type: (String) The type of test.
+            use_public_bgp: (Boolean) Enable to automatically add all available Public BGP Monitors to the test.
+        importStatements: []
+    thousandeyes_web_transaction Resource - terraform-provider-thousandeyes:
+        subCategory: ""
+        name: thousandeyes_web_transaction Resource - terraform-provider-thousandeyes
+        title: thousandeyes_web_transaction Resource - terraform-provider-thousandeyes
+        argumentDocs:
+            agent_id: (Number) The unique ID for the ThousandEyes agent.
+            agents: '(Block Set, Min: 1) The list of ThousandEyes agents to use. (see below for nested schema)'
+            aid: (Number) The account group ID.
+            alert_rules: (Block Set) Gets the ruleId from the /alert-rules endpoint. If alertsEnabled is set to 'true' and alertRules is not included in a creation/update query, the applicable defaults will be used. (see below for nested schema)
+            alerts_enabled: (Boolean) Set to 'true' to enable alerts, or 'false' to disable alerts. The default value is 'true'.
+            api_links: (List of Object) Self links to the endpoint to pull test metadata, and data links to the endpoint for test data. Read-only, and shows rel and href elements. (see below for nested schema)
+            auth_type: (String) [NONE, BASIC, NTLM, KERBEROS] The HTTP authentication type. Defaults to NONE.
+            bandwidth_measurements: (Boolean) Set to 1 to measure bandwidth. This only applies to Enterprise Agents assigned to the test, and requires that networkMeasurements is set. Defaults to 'false'.
+            builtin: (Boolean)
+            content_regex: (String) Verify content using a regular expression. This field does not require escaping.
+            created_by: (String) Created by user.
+            created_date: (String) The date of creation.
+            credentials: (List of Number) The array of credentialID integers. You can get the credentialId from the /credentials endpoint.
+            custom_headers: (Map of String) The custom headers.
+            description: (String) A description of the alert rule. Defaults to an empty string.
+            desired_status_code: (String) The valid HTTP response code you’re interested in retrieving.
+            enabled: (Boolean) Enables or disables the test.
+            group_id: (Number)
+            groups: (Set of Object) The array of label objects. (see below for nested schema)
+            href: (String)
+            http_target_time: (Number) The target time for HTTP server completion, specified in milliseconds.
+            http_time_limit: (Number) The target time for HTTP server limits, specified in seconds.
+            http_version: (Number) Set to 2 for the default HTTP version (prefer HTTP/2), or 1 for HTTP/1.1 only.
+            id: (String) The ID of this resource.
+            include_headers: (Boolean) Set to 'true' to capture response headers for objects loaded by the test.
+            interval: (Number) The interval to run the test on, in seconds.
+            live_share: (Boolean) Set to 'true' for a test shared with your account group, or to 'false' for a normal test.
+            modified_by: (String) Last modified by this user.
+            modified_date: (String) The date the test was last modified. Shown in UTC.
+            mtu_measurements: (Boolean) Measure MTU sizes on the network from agents to the target.
+            name: (String) Account name.
+            network_measurements: (Boolean) Set to 'true' to enable network measurements.
+            num_path_traces: (Number) The number of path traces.
+            password: (String) The password to be used to authenticate with the destination server.
+            path_trace_mode: (String) [classic or inSession] Choose 'inSession' to perform the path trace within a TCP session. Default value is 'classic'.
+            probe_mode: (String) [AUTO, SACk, or SYN] The probe mode used by end-to-end network tests. This is only valid if the protocol is set to TCP. The default value is AUTO.
+            protocol: (String) The protocol used by dependent network tests (end-to-end, path trace, PMTUD). Default value is TCP.
+            rel: (String)
+            rule_id: (Number) The unique ID of the alert rule.
+            saved_event: (Boolean) Set to 'true' for a saved event, or to 'false' for a normal test.
+            shared_with_accounts: '(Block List) [“serverName”: “fqdn of server”] The array of DNS Server objects. (see below for nested schema)'
+            ssl_version_id: (Number) Defines the SSL version. 0 for auto, 3 for SSLv3, 4 for TLS v1.0, 5 for TLS v1.1, 6 for TLS v1.2.
+            subinterval: (Number) The subinterval for round-robin testing (in seconds). The value must be less than or equal to 'interval'.
+            target_time: (Number) The target time for completion. The default value is 50 percent of the time limit, specified in seconds.
+            test_id: (Number) The unique ID of the test.
+            test_name: (String) The name of the test.
+            tests: (List of Object) (see below for nested schema)
+            time_limit: (Number) The time limit for the transaction. The default value is 30s.
+            transaction_script: (String) The full selenium transaction script.
+            type: (String) The type of test.
+            url: (String) The target URL for the test.
+            use_ntlm: (Boolean) Enable to use basic authentication. Only include this field if you are using authentication. Requires the username and password to be set if enabled.
+            user_agent: (String) The user-agent string to be provided during the test.
+            username: (String) The username to be used to authenticate with the destination server.
+            verify_certificate: (Boolean) Set whether to ignore certificate errors. Set to 'false' to ignore certificate errors. The default value is 'true'.
         importStatements: []
