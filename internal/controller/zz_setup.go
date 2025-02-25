@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-
 package controller
 
 import (
@@ -10,9 +9,8 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
+	server "github.com/gorositopablo/provider-thousandeyes/internal/controller/httptest/server"
 	providerconfig "github.com/gorositopablo/provider-thousandeyes/internal/controller/providerconfig"
-server "github.com/gorositopablo/provider-thousandeyes/internal/controller/httptest/server"
-
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
